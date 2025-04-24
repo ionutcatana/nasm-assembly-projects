@@ -1,5 +1,7 @@
 bits 32
 
+; the kernel has to be in the text section!
+
 CODE_SEG equ 0x08
 DATA_SEG equ 0x10
 
@@ -21,3 +23,6 @@ _start:
     out 0x92, al
 
     jmp $
+
+; magic alignment fix
+times 512 - ($ - $$) db 0
