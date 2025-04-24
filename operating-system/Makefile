@@ -1,19 +1,23 @@
-FILES = build/kernel.o
+FILES = ./build/kernel.o
 
-all: bin/bootloader.bin $(FILES)
-	rm -rf bin/os.bin
-	dd if=bin/bootloader.bin >> bin/os.bin
+all: ./bin/bootloader.bin ./bin/kernel.bin
+	rm -rf ./bin/os.bin
+	dd if=./bin/bootloader.bin >> ./bin/os.bin
 
-bin/bootloader.bin: src/boot/bootloader.S
-	nasm -f bin src/boot/bootloader.S -o bin/bootloader.bin
+./bin/kernel.bin: $(FILES)
+	i686-elf-ld -g -relocatable $(FILES) -o ./build/kernelfull.o
+	i686-elf-gcc -T ./src/linker.ld -o ./bin/kernel.bin -ffreestanding -O0 -nostdlib ./build/kernelfull.o
 
-build/kernel.o: src/kernel/kernel.S
-	nasm -f elf -g src/kernel/kernel.S -o build/kernel.o
+./bin/bootloader.bin: ./src/boot/bootloader.S
+	nasm -f bin ./src/boot/bootloader.S -o ./bin/bootloader.bin
+
+./build/kernel.o: ./src/kernel/kernel.S
+	nasm -f elf -g ./src/kernel/kernel.S -o ./build/kernel.o
 
 qemu: all
-	qemu-system-x86_64 -hda bin/bootloader.bin
+	qemu-system-x86_64 -hda ./bin/os.bin
 
 clean:
-	rm -rf bin/*
-	rm -rf boot/*.bin
-	rm -rf build/*.o build/*.so build/*.a
+	rm -rf ./bin/*
+	rm -rf ./boot/*.bin
+	rm -rf ./build/*.o ./build/*.so ./build/*.a
