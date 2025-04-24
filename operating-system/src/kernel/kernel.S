@@ -3,7 +3,8 @@ bits 32
 CODE_SEG equ 0x08
 DATA_SEG equ 0x10
 
-load32:
+global _start
+_start:
     ; setup segment registers
     mov ax, DATA_SEG
     mov ds, ax

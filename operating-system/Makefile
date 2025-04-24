@@ -3,6 +3,8 @@ FILES = ./build/kernel.o
 all: ./bin/bootloader.bin ./bin/kernel.bin
 	rm -rf ./bin/os.bin
 	dd if=./bin/bootloader.bin >> ./bin/os.bin
+	dd if=./bin/kernel.bin >> ./bin/os.bin
+	dd if=/dev/zero bs=512 count=100 >> ./bin/os.bin
 
 ./bin/kernel.bin: $(FILES)
 	i686-elf-ld -g -relocatable $(FILES) -o ./build/kernelfull.o
@@ -18,6 +20,5 @@ qemu: all
 	qemu-system-x86_64 -hda ./bin/os.bin
 
 clean:
-	rm -rf ./bin/*
-	rm -rf ./boot/*.bin
+	rm -rf ./bin/*.bin
 	rm -rf ./build/*.o ./build/*.so ./build/*.a
