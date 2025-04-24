@@ -5,6 +5,8 @@ bits 32
 CODE_SEG equ 0x08
 DATA_SEG equ 0x10
 
+extern kmain
+
 global _start
 _start:
     ; setup segment registers
@@ -22,6 +24,7 @@ _start:
     or al, 2
     out 0x92, al
 
+    call kmain
     jmp $
 
 ; magic alignment fix
