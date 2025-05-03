@@ -1,2 +1,2 @@
-gcc: 10.2.0
-binutils: 2.35
+gcc: 12.2.0
+binutils: 2.39
